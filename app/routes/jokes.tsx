@@ -9,9 +9,11 @@ export const links: LinksFunction = () => {
 
 function jokes() {
   return (
-    <div>
-      <h1>JOKES 🤣</h1>
-      <Outlet />
+    <div className="container">
+      <div className="content">
+        <h1>JOKES 🤣</h1>
+        <Outlet />
+      </div>
     </div>
   );
 }

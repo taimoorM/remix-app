@@ -5,6 +5,14 @@ import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import stylesUrl from "~/styles/jokes.css";
 import { db } from "~/utils/db.server";
 
+type joke = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  name: string;
+  content: string;
+};
+
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
@@ -36,7 +44,7 @@ export default function JokesRoute() {
             <Link to=".">Get a random joke</Link>
             <p>Here are a few more jokes to check out:</p>
             <ul>
-              {data.jokes.map((joke) => (
+              {data.jokes.map((joke: joke) => (
                 <li key={joke.id}>
                   <Link to={joke.id}>{joke.name}</Link>
                 </li>

@@ -1,30 +1,44 @@
+import type { ActionArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+
+import { db } from "~/utils/db.server";
+
+export const action = async ({ request }: ActionArgs) => {
+  const form = await request.formData();
+  const name = form.get("name");
+  const content = form.get("content");
+  // we do this type check to be extra sure and to make TypeScript happy
+  // we'll explore validation next!
+  if (typeof name !== "string" || typeof content !== "string") {
+    throw new Error(`Form not submitted correctly.`);
+  }
+
+  const fields = { name, content };
+
+  const joke = await db.joke.create({ data: fields });
+  return redirect(`/jokes/${joke.id}`);
+};
+
 function newJoke() {
   return (
     <div>
-      <form action="">
-        <fieldset className="flex flex-col space-y-4">
-          <legend>Add your funny a$$ joke:</legend>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Name:
+      <form method="post">
+        <legend>Add your funny a$$ joke:</legend>
+        <div>
+          <label>
+            Name: <input type="text" name="name" />
           </label>
-          <input type="text" name="name" id="name" />
-          <label
-            htmlFor="joke"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Your joke:
+        </div>
+        <div>
+          <label>
+            Content: <textarea name="content" />
           </label>
-          <textarea name="joke" id="joke"></textarea>
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
+        </div>
+        <div>
+          <button type="submit" className="button">
             Add
           </button>
-        </fieldset>
+        </div>
       </form>
     </div>
   );

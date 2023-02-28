@@ -1,9 +1,16 @@
+import type { LinksFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
+
+import stylesUrl from "~/styles/jokes.css";
+
+export const links: LinksFunction = () => {
+  return [{ rel: "stylesheet", href: stylesUrl }];
+};
 
 function jokes() {
   return (
-    <div className="flex justify-center items-center flex-col space-y-2 mt-10">
-      <h1 className="text-2xl">JOKES 🤣</h1>
+    <div>
+      <h1>JOKES 🤣</h1>
       <Outlet />
     </div>
   );

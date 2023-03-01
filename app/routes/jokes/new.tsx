@@ -7,13 +7,13 @@ import { badRequest } from "~/utils/request.server";
 
 function validateJokeName(name: string) {
   if (name.length < 3) {
-    return "Joke name is not long enough.";
+    return "Joke name must be at least 3 characters long.";
   }
 }
 
 function validateJokeContent(content: string) {
   if (content.length < 10) {
-    return "The joke content must greater than 10 characters.";
+    return "The joke content must be greater than 10 characters.";
   }
 }
 
@@ -50,7 +50,7 @@ export const action = async ({ request }: ActionArgs) => {
   return redirect(`/jokes/${joke.id}`);
 };
 
-function newJoke() {
+export default function CreateNewJoke() {
   const actionData = useActionData<typeof action>();
   return (
     <div>
@@ -58,7 +58,7 @@ function newJoke() {
         <legend>Add your funny a$$ joke:</legend>
         <div>
           <label>
-            Name:
+            Name:{" "}
             <input
               type="text"
               defaultValue={actionData?.fields?.name}
@@ -77,10 +77,34 @@ function newJoke() {
         </div>
         <div>
           <label>
-            Content: <textarea name="content" />
+            Content:{" "}
+            <textarea
+              defaultValue={actionData?.fields?.content}
+              name="content"
+              aria-invalid={
+                Boolean(actionData?.fieldErrors?.content) || undefined
+              }
+              aria-errormessage={
+                actionData?.fieldErrors?.content ? "content-error" : undefined
+              }
+            />
           </label>
+          {actionData?.fieldErrors?.content && (
+            <p
+              className="form-validation-error"
+              role="alert"
+              id="content-error"
+            >
+              {actionData.fieldErrors.content}
+            </p>
+          )}
         </div>
         <div>
+          {actionData?.formError && (
+            <p className="form-validation-error" role="alert">
+              {actionData.formError}
+            </p>
+          )}
           <button type="submit" className="button">
             Add
           </button>
@@ -89,4 +113,3 @@ function newJoke() {
     </div>
   );
 }
-export default newJoke;
